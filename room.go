@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"mycode/trace"
 	"net/http"
 
 	"github.com/gorilla/websocket"
@@ -38,12 +39,16 @@ func (r *room) run() {
 		case client := <-r.join:
 			// client joining
 			r.clients[client] = true
+			r.tracer.Trace("Client joined")
 		case client := <-r.leave:
 			delete(r.clients, client)
 			close(client.send)
+			r.tracer.Trace("Client left")
 		case msg := <-r.forward:
+			r.tracer.Trace("Message recieved: ", string(msg))
 			for client := range r.clients {
 				client.send <- msg
+				r.tracer.Trace(" -- sent to client")
 			}
 		}
 	}
