@@ -1,0 +1,24 @@
+# Dockerfile for chat
+
+# Start from golang 1.12
+FROM golang:1.12 as builder
+
+LABEL maintainer="Sebastian Edholm <sebbe@sebb.io>"
+
+WORKDIR /go/src/mycode/chat
+
+COPY . .
+
+RUN go get -d -v ./...
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o /go/bin/chat .
+# RUN go install -v ./...  
+
+#### Start new stage from scractch ####
+FROM alpine:latest
+
+RUN apk --no-cache add ca-certificates
+
+WORKDIR /root/
+COPY --from=builder /go/bin/chat .
+EXPOSE 8080
+CMD ["./chat"]

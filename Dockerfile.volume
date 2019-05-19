@@ -1,0 +1,26 @@
+# Docker file ref: https://docs.docker.com/engine/reference/builder/
+
+# start from go v1.12 base image
+FROM golang:1.12
+
+LABEL maintainer="Sebastian Edholm <sebbe@sebb.io>"
+
+ARG APP_NAME=chat
+ARG LOG_DIR=/${APP_NAME}/logs
+
+# Create log dir
+
+RUN mkdir -p ${LOG_DIR}
+
+ENV LOG_FILE_LOCATION=${LOG_DIR}/app.log
+
+WORKDIR $GOPATH/src/mycode/chat
+
+COPY . .
+RUN go get -d -v ./...
+RUN go install -v ./...
+
+EXPOSE 8080
+
+VOLUME ["/chat/logs"]
+CMD ["chat"]
