@@ -76,13 +76,19 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		creds, err := provider.CompleteAuth(objx.MustFromURLQuery(r.URL.RawQuery))
 		if err != nil {
-			http.Error(w, fmt.Sprintf("Error when trying to complete auth for %sL %s", provider, err),
+			http.Error(w, fmt.Sprintf("Error when trying to complete auth for %s: %s", provider, err),
+				http.StatusInternalServerError)
+			return
+		}
+		user, err := provider.GetUser(creds)
+		if err != nil {
+			http.Error(w, fmt.Sprintf("Error when trying to complete auth for %s: %s", provider, err),
 				http.StatusInternalServerError)
 			return
 		}
 		authCookieValue := objx.New(map[string]interface{}{
 			"name": user.Name(),
-		}).MustBase()
+		}).MustBase64()
 		http.SetCookie(w, &http.Cookie{
 			Name:  "auth",
 			Value: authCookieValue,
