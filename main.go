@@ -3,13 +3,13 @@ package main
 import (
 	"flag"
 	"log"
-	"mycode/trace"
 	"net/http"
 	"os"
 	"path/filepath"
 	"sync"
 	"text/template"
 
+	trace "github.com/sebastianedholme/go_tracer"
 	"github.com/stretchr/gomniauth"
 	"github.com/stretchr/gomniauth/providers/github"
 	"github.com/stretchr/objx"

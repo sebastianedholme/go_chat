@@ -2,10 +2,10 @@ package main
 
 import (
 	"log"
-	"mycode/trace"
 	"net/http"
 
 	"github.com/gorilla/websocket"
+	trace "github.com/sebastianedholme/go_tracer"
 	"github.com/stretchr/objx"
 )
 
