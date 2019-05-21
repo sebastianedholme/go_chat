@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"strings"
@@ -37,15 +36,13 @@ func MustAuth(handler http.Handler) http.Handler {
 // loginHandler handles the third-party login process.
 // format: /auth/{action}/{provider}
 func loginHandler(w http.ResponseWriter, r *http.Request) {
-
 	// split segments
 	segs := strings.Split(r.URL.Path, "/")
-	fmt.Println("The len of segs is: ", len(segs))
 
 	// secure segement length
 	if len(segs) <= 3 {
 		w.WriteHeader(http.StatusNotFound)
-		fmt.Fprintf(w, "This is not permitted")
+		log.Fprintf(w, "This is not permitted")
 		return
 	}
 
@@ -56,6 +53,6 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 		log.Println("TODO handle login for", provider)
 	default:
 		w.WriteHeader(http.StatusNotFound)
-		fmt.Fprintf(w, "Auth actgion %s not supported", action)
+		log.Fprintf(w, "Auth actgion %s not supported", action)
 	}
 }
